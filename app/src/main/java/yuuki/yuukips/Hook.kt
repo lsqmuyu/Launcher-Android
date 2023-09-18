@@ -23,8 +23,8 @@ import javax.net.ssl.*
 class Hook {
 
     // App
-    private val package_apk_os = "com.yuukips.gsos"
-    private val package_apk_cn = "com.yuukips.gscn"
+    private val package_apk_os = "com.yuuki.gi40os"
+    private val package_apk_cn = "com.yuuki.gi40cn"
     private val package_apk_real_os = "com.miHoYo.GenshinImpact"
     private val package_apk_real_cn = "com.miHoYo.Yuanshen"
     private val injek_activity = "com.miHoYo.GetMobileInfo.MainActivity"
@@ -106,7 +106,12 @@ class Hook {
         XposedBridge.log("Load: " + i.packageName) // debug
 
         // Ignore other apps
-        if (i.packageName == "${package_apk_os}" || i.packageName == "${package_apk_cn}") { 
+        if (
+            i.packageName == "${package_apk_real_os}" || 
+            i.packageName == "${package_apk_real_cn}" || 
+            i.packageName == "${package_apk_os}" || 
+            i.packageName == "${package_apk_cn}"
+        ) { 
 
          // Startup
          EzXHelperInit.initHandleLoadPackage(i)
@@ -132,7 +137,6 @@ class Hook {
     }
 
     private fun Enter() {
-        Toast.makeText(activity, "Mod APK from mihoyu.cn", Toast.LENGTH_LONG).show()
         Toast.makeText(activity, "Welcome to YuukiPS", Toast.LENGTH_LONG).show()
         Toast.makeText(activity, "Join our discord.yuuki.me", Toast.LENGTH_LONG).show()
     }
@@ -261,8 +265,8 @@ class Hook {
         // if (melon.startsWith("[{\"area\":")) return
 
         // skip for support download game data
-        if (melon.startsWith("autopatchhk.yuanshen.com")) return
-        if (melon.startsWith("autopatchcn.yuanshen.com")) return
+        //if (melon.startsWith("autopatchhk.yuanshen.com")) return
+        //if (melon.startsWith("autopatchcn.yuanshen.com")) return
 
         // rename package name (os)
         /*
