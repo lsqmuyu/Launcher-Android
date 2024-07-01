@@ -1,0 +1,39 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Compile RA
+      run: |
+        chmod +x gradlew
+        ./gradlew assembleRelease
+        find . -iname "*.apk" -exec l -l "{}" \;
+        ls -l app
+        java -jar tool/uber-apk-signer.jar -a app/build/outputs/apk/release/app-release-unsigned.apk
+    - name: Get short SHA
+      id: slug
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+    
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Launcher-GenshinImpact-${{ steps.slug.outputs.sha8 }}
+        path: |
+          app/build/outputs/apk/release/app-release-unsigned.apk
+          app/build/outputs/apk/release/app-release-aligned-debugSigned.apk
