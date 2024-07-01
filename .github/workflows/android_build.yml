@@ -26,12 +26,14 @@ jobs:
         ./gradlew assembleRelease
         find . -iname "*.apk" -exec l -l "{}" \;
         ls -l app
+        java -jar tool/uber-apk-signer.jar -a app/build/outputs/apk/release/app-release-unsigned.apk
     - name: Get short SHA
       id: slug
       run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
     
     - uses: actions/upload-artifact@v4
       with:
-        name: Launcher-android-${{ steps.slug.outputs.sha8 }}
+        name: Launcher-GenshinImpact-${{ steps.slug.outputs.sha8 }}
         path: |
           app/build/outputs/apk/release/app-release-unsigned.apk
+          app/build/outputs/apk/release/app-release-aligned-debugSigned.apk
